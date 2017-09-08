@@ -1,7 +1,14 @@
 # Learning Full stack with Udacity
 
 ## Jump-start Toolkits
-
+- Rolling a demonstrative server with shell + ncat:
+```shell
+!server                        !client
+$ncat -l 8000                  $ncat 127.0.0.1 8000
+listen              ---->      listen
+response            <----      response
+etc.                <---->     etc. 
+```
 - Rolling a webserver in python3:  
 `python3 -m http.server 8000`
 
