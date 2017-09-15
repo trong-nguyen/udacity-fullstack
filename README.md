@@ -7,10 +7,22 @@
 $ncat -l 8000                  $ncat 127.0.0.1 8000
 listen              ---->      listen
 response            <----      response
-etc.                <---->     etc. 
+etc.                <---->     etc.
 ```
-- Rolling a webserver in python3:  
+- Rolling a webserver in python3:
 `python3 -m http.server 8000`
+
+## Devops Tips
+- [Refresh DNS](https://superuser.com/a/346519) on OSX 10.9 and above:
+`sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder`
+
+### VirtualBox and Vagrant:
+- vagrant is like a layer above virtualbox - the virtualization layer. Virtualization layers could be anything like virtualmachine, virtualbox, etc.
+- `vagrant global-status`: list all vagrant machines:
+- `VBoxManage list runningvms`: list all running virtualbox machines:
+- `VBoxManage controlvm vm_id poweroff`: stop a virtualbox machine where `vm_id` could be obtained from the above `list` command
+
+
 
 ## Templates
 
@@ -39,4 +51,4 @@ etc.                <---->     etc.
 ```
 
 ### Udacity Classroom Bugs
-- First Project - Movie Trailer Website: Broken links to forum 
+- First Project - Movie Trailer Website: Broken links to forum
