@@ -21,6 +21,7 @@ etc.                <---->     etc.
 - `vagrant global-status`: list all vagrant machines:
 - `VBoxManage list runningvms`: list all running virtualbox machines:
 - `VBoxManage controlvm vm_id poweroff`: stop a virtualbox machine where `vm_id` could be obtained from the above `list` command
+- `lsof -n -i4TCP:8080` check which PID occupies which port, for ex. 8080 here
 
 
 
