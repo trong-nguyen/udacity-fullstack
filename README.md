@@ -15,6 +15,7 @@ etc.                <---->     etc.
 ## Devops Tips
 - [Refresh DNS](https://superuser.com/a/346519) on OSX 10.9 and above:
 `sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder`
+- Keep local and remote directories in sync with `lsyncd`, reference [here](https://serverfault.com/a/485808)
 
 ### VirtualBox and Vagrant:
 - vagrant is like a layer above virtualbox - the virtualization layer. Virtualization layers could be anything like virtualmachine, virtualbox, etc.

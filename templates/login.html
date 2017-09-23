@@ -17,7 +17,7 @@
 <body>
 
 
-<!-- GOOGLE PLUS SIGN IN BUTTON-->
+<!-- GOOGLE PLUS SIGN IN-->
 
 
           <div id="signInButton">
@@ -51,7 +51,7 @@ function signInCallback(authResult) {
         if (result) {
           $('#result').html('Login Successful!</br>'+ result + '</br>Redirecting...')
          setTimeout(function() {
-          window.location.href = "/restaurant";
+          window.location.href = "/restaurants";
          }, 4000);
 
       } else if (authResult['error']) {
@@ -66,7 +66,7 @@ function signInCallback(authResult) {
 
 
 
-<!--END GOOGLE PLUS SIGN IN BUTTON -->
+<!--END GOOGLE PLUS SIGN IN -->
 
   </body>
 
