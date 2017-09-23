@@ -1,7 +1,10 @@
+import random
+import string
 from flask import (
 	Flask, render_template,
 	request, url_for, redirect,
 	flash, jsonify)
+from flask import session as login_session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Restaurant, MenuItem
@@ -17,6 +20,13 @@ app = Flask(__name__)
 def describe_item(item):
 	attributes = r'<br/>'.join([item.name, item.price, item.description])
 	return '<p>{}</p>'.format(attributes)
+
+@app.route('/login/')
+def login():
+	state = ''.join([random.choice(string.ascii_uppercase + string.digits)
+		for x in range(32)])
+	login_session['state'] = state
+	return render_template('login.html', STATE=state)
 
 
 @app.route('/')
