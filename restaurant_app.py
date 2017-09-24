@@ -42,6 +42,7 @@ def gconnect():
         response.headers['Content-type'] = 'application/json'
         return response
     code = request.data
+    # print 'Google obtained code', code
     try:
         oauth_flow = flow_from_clientsecrets('client_secrets.json', scope='')
         oauth_flow.redirect_uri = 'postmessage'

@@ -24,6 +24,27 @@ etc.                <---->     etc.
 - `VBoxManage controlvm vm_id poweroff`: stop a virtualbox machine where `vm_id` could be obtained from the above `list` command
 - `lsof -n -i4TCP:8080` check which PID occupies which port, for ex. 8080 here
 
+## Oauth2 Protocols
+![](https://developers.google.com/accounts/images/webflow.png)
+Google's web server applications
+
+There are 3 sides in the process:
+- The user and his helper - the web client - TU
+- The web server - TS
+- The auth provider - TA
+
+Scenario - Goals:
+- The server would like to identify the user - authentication
+  + Who is the user
+  +
+
+1a. The web client presents the user with a login / signup form AND a callback plus a redirect URL - what to do after signing in
+1b. The user sign in
+2. The auth provider presents the user with login form
+  - Success: return a CODE to the web client
+  - Failed: return an ERR code
+3. On receiving the CODE, the web client send it to the web server
+4. On receiving the CODE, the web server send it to the auth provider and get back an ACCESS TOKEN (and probably an REFRESH TOKEN). Using the ACCESS TOKEN the web server can identify the user and obtain necessary information from the user.
 
 
 ## Templates
