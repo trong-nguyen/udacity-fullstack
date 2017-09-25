@@ -17,6 +17,26 @@ etc.                <---->     etc.
 `sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder`
 - Keep local and remote directories in sync with `lsyncd`, reference [here](https://serverfault.com/a/485808)
 
+## Python Tips
+- Long string definition without unecessary indents and spaces
+```python
+long_string = (
+  "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABG"
+  "l0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAEN"
+  "xBRpFYmctaKCfwrBSCrRLuL3iEW6+EEUG8XvIVjYWNgJdhFjIX"
+  "rz6pKtPB5e5rmq7tmxk+hqO34e1or0yXTGrj9sXGs1Ib73efh1"
+  "AAAABJRU5ErkJggg=="
+)
+```
+- Or multiline string
+```python
+multiline_string = '''
+for var in vars:
+  print a
+concat(a)
+'''
+```
+
 ### VirtualBox and Vagrant:
 - vagrant is like a layer above virtualbox - the virtualization layer. Virtualization layers could be anything like virtualmachine, virtualbox, etc.
 - `vagrant global-status`: list all vagrant machines:
@@ -34,17 +54,22 @@ There are 3 sides in the process:
 - The auth provider - TA
 
 Scenario - Goals:
-- The server would like to identify the user - authentication
-  + Who is the user
-  +
+- The web server would like to make sure that the user is entitled to some resources which means:
+  + The user is the one whom he claims to be
+  + If so, then that identified user was granted access to the requested resources
+- Technically, in order to verify the above 2 points what the web server need is:
+  + A claim from the user (who he said he is)
+  + A proof, which he obtained from a specific auth provider, - a CODE which can be exchanged for a TOKEN from the same provider (Google+, Facebook, etc.)
+- From there authentication and authorization process can follow on the web server.
 
-1a. The web client presents the user with a login / signup form AND a callback plus a redirect URL - what to do after signing in
-1b. The user sign in
-2. The auth provider presents the user with login form
+OAuth Flow:
+1. The web client presents the user with a login / signup form AND a callback plus a redirect URL - what to do after signing in
+2. The user sign in
+3. The auth provider presents the user with login form
   - Success: return a CODE to the web client
   - Failed: return an ERR code
-3. On receiving the CODE, the web client send it to the web server
-4. On receiving the CODE, the web server send it to the auth provider and get back an ACCESS TOKEN (and probably an REFRESH TOKEN). Using the ACCESS TOKEN the web server can identify the user and obtain necessary information from the user.
+4. On receiving the CODE, the web client send it to the web server
+5. On receiving the CODE, the web server send it to the auth provider and get back an ACCESS TOKEN (and probably an REFRESH TOKEN). Using the ACCESS TOKEN the web server can identify the user and obtain necessary information from the user.
 
 
 ## Templates
