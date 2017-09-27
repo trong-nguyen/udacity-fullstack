@@ -114,6 +114,7 @@ def gconnect():
 
     data = answer.json()
 
+    login_session['provider'] = 'google'
     login_session['username'] = data['name']
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
@@ -142,20 +143,30 @@ def fbconnect():
         response = make_response(json.dumps('Invalid state parameter.'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
-    access_token = request.data
+    exchange_token = request.data
 
     fb_secrets = json.loads(open('fb_secrets.json', 'r').read())
     app_id = fb_secrets['web']['app_id']
     app_secret = fb_secrets['web']['app_secret']
-    url = 'https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id={}&client_secret={}&fb_exchange_token={}'.format(
-        app_id, app_secret, access_token)
+    url = (
+        'https://graph.facebook.com'
+            '/oauth/access_token?'
+                'grant_type=fb_exchange_token'
+                '&client_id={}'
+                '&client_secret={}'
+                '&fb_exchange_token={}'
+        ).format(app_id, app_secret, exchange_token)
     h = httplib2.Http()
     result = h.request(url, 'GET')[1]
 
     # userinfo_url = 'https://graph.facebook.com/v2.8/me'
-    token = result.split(',')[0].split(':')[1].replace('"', '')
+    access_token = json.loads(result)['access_token']
 
-    url = 'https://graph.facebook.com/v2.8/me?access_token={}&fields=name,id,email'.format(token)
+    url = (
+        'https://graph.facebook.com'
+            '/v2.8/me?access_token={}'
+                '&fields=name,id,email'
+        ).format(access_token)
     h = httplib2.Http()
     result = h.request(url, 'GET')[1]
 
@@ -165,8 +176,16 @@ def fbconnect():
     login_session['username'] = data['name']
     login_session['email'] = data['email']
     login_session['facebook_id'] = data['id']
+    login_session['access_token'] = access_token
 
-    url = 'https://graph.facebook.com/v2.8/me/picture?access_token={}&redirect=0&height=200&width=200'.format(token)
+    url = (
+        'https://graph.facebook.com'
+            '/v2.8/me/picture?'
+                'access_token={}'
+                '&redirect=0'
+                '&height=200'
+                '&width=200'
+        ).format(access_token)
     h = httplib2.Http()
     result = h.request(url, 'GET')[1]
     data = json.loads(result)
@@ -205,8 +224,6 @@ def gdisconnect():
     url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % login_session['access_token']
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
-    print 'result is '
-    print result
     if result['status'] == '200':
         del login_session['access_token']
         del login_session['gplus_id']
@@ -220,6 +237,45 @@ def gdisconnect():
         response = make_response(json.dumps('Failed to revoke token for given user.', 400))
         response.headers['Content-Type'] = 'application/json'
         return response
+
+@app.route('/fbdisconnect')
+def fbdisconnect():
+    facebook_id = login_session['facebook_id']
+    access_token = login_session['access_token']
+    url = (
+        'https://graph.facebook.com'
+            '/{}/permissions'
+                '?access_token={}'
+        ).format(facebook_id, access_token)
+
+    result = requests.delete(url)
+
+    if result.json()['success']:
+        del login_session['username']
+        del login_session['email']
+        del login_session['picture']
+        del login_session['user_id']
+        del login_session['facebook_id']
+        return make_response(json.dumps("You have been logged out"), 200)
+    else:
+        return make_response(json.dumps("Error logging out!"), 400)
+
+@app.route('/disconnect')
+def disconnect():
+    provider = login_session.get('provider')
+    if provider:
+        if provider == 'google':
+            gdisconnect()
+        elif provider == 'facebook':
+            fbdisconnect()
+
+        del login_session['provider']
+
+        flash('You have successfully been logged out!')
+    else:
+        flash('Not logged in!')
+
+    return redirect(url_for('showRestaurants'))
 
 @app.route('/')
 @app.route('/restaurants/')
