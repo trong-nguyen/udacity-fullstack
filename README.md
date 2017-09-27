@@ -72,7 +72,7 @@ OAuth Flow:
 5. On receiving the CODE, the web server send it to the auth provider and get back an ACCESS TOKEN (and probably an REFRESH TOKEN). Using the ACCESS TOKEN the web server can identify the user and obtain necessary information from the user.
 
 ![](https://scontent.fsgn5-4.fna.fbcdn.net/v/t39.2178-6/851584_503291546407012_1005168000_n.png?oh=b0af1d36bb8c4da5881739e7da0e371d&oe=5A409E8A)
-Facebook's User Token
+Facebook Auth Scenario
 
 ## Templates
 
