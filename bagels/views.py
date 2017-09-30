@@ -27,6 +27,7 @@ def verify_password(username, password):
 #ADD a /users route here
 @app.route('/users', methods=['POST'])
 def register():
+    print request.json
     username, password = map(request.json.get, ['username', 'password'])
     if not username or not password:
         abort(400)

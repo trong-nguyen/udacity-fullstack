@@ -16,6 +16,11 @@ etc.                <---->     etc.
 - [Refresh DNS](https://superuser.com/a/346519) on OSX 10.9 and above:
 `sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder`
 - Keep local and remote directories in sync with `lsyncd`, reference [here](https://serverfault.com/a/485808)
+### cURL tips
+- Basic POST action with JSON data:
+`curl -X POST -H "Content-Type: application/json" http:desiredurl -d '{"k1":"v1", "k2":"v2"}'`
+- Basic READ action with username/password login
+`curl -u myusernam:mypassword http:desiredurl`
 
 ## Python Tips
 - Long string definition without unecessary indents and spaces
