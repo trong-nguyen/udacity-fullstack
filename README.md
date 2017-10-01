@@ -16,6 +16,9 @@ etc.                <---->     etc.
 - [Refresh DNS](https://superuser.com/a/346519) on OSX 10.9 and above:
 `sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder`
 - Keep local and remote directories in sync with `lsyncd`, reference [here](https://serverfault.com/a/485808)
+### URN, URL and URI
+URLs and URNs are URIs. All refer to resources (letter R). In http://domain.com/path, **http://** is the mean (or `ftp://`, or `mailto:`), **domain.com/path** is the name (URN) and so URLs would technically be `the mean + the name`. URIs are the most generic terms, they could be anything that somehow identify something. URLs are the most specific which show you exactly **how** and **what** to get. Surprisingly, `tel:+1 728 9239` **is** a URI!!!
+![](https://danielmiessler.com/images/URI-vs.-URL-e1464829000786.png)
 ### cURL tips
 - Basic POST action with JSON data:
 `curl -X POST -H "Content-Type: application/json" http:desiredurl -d '{"k1":"v1", "k2":"v2"}'`
