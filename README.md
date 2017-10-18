@@ -30,6 +30,75 @@ Surprisingly (or not) by that definition, `tel:+1 728 9239` **is** a URI!!!
 - Basic READ action with username/password login
 `curl -u myusernam:mypassword http:desiredurl`
 
+### Steps in Iterative Development
+- Mockups
+- Routing
+- Templates and forms
+- CRUD functionalities
+- API endpoints
+
+### CSS Layout Structure
+#### Flows
+
+Playground can be seen [here](templates/test_css.html).
+
+Courses can be found [here](https://classroom.udacity.com/nanodegrees/nd004/parts/fe2ad0cf-06b0-4541-87ab-0b6d59e21ef1/modules/31cc93f7-9d62-44d2-b0fc-ab68b4ff90f0/lessons/5bc1143d-6294-412b-9a32-27d17142f9d2/concepts/3346831f-e58c-4aca-863c-a785d6bc56f7).
+
+1. **Normal flow** (default): block elements (`<div>`) stack vertically, inline elements (`<span>`) horizontally and wrap to the next line if overflow.
+
+
+```css
+.default {
+  position: static;
+}
+```
+
+You can change the default `display` attribute to change their default behaviors:
+
+*Block*:
+
+```css
+div {
+  /*default is block*/
+  display: inline;
+  background-color: cyan;
+}
+```
+
+*Inline*:
+```css
+span {
+  /*default is inline*/
+  display: block;
+  background-color: magenta;
+}
+```
+
+Block elements can be sized (with `width`), inlined elements can not.
+
+*Hybrid*: elements assigned with `inline-block` display attribute can be sized like `block` and laid out (inline) like `inline` elements.
+
+```css
+hybrid-elm {
+  display: inline-block;
+}
+```
+
+2. **Relative flow**: used to shift elements after they were laid out with *normal flow*.
+
+```css
+.relative {
+  position: static;
+  /*either this or bottom*/
+  top: 10px;
+  /*either this or right*/
+  left: 10px;
+}
+```
+
+
+
+
 ## Python Tips
 - Long string definition without unecessary indents and spaces
 ```python
