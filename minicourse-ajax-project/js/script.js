@@ -44,9 +44,9 @@ function loadData(event) {
         });
 
         var list = ha.map(function (article) {
-            var $li = $('<li></li>');
+            var $li = $('<li>');
             $li.append(
-                $('<a></a>')
+                $('<a>')
                     .attr('href', article.url)
                     .text(article.title)
                 );
@@ -54,7 +54,65 @@ function loadData(event) {
         });
 
         $nytElem.empty().append(list);
+    })
+    .error(function (event) {
+        $nytElem.empty().text('Could not load NYT articles');
     });
+
+    // Wikipedia request
+    function getFeeds(searchText) {
+        var endpoint = "https://en.wikipedia.org/w/api.php?";
+        var params = {
+            "action": "query",
+            "format": "json",
+            "prop": "extracts|info|pageimages",
+            "generator": "search",
+            "exintro": 1,
+            // "explaintext": 1,
+            "exsectionformat": "wiki",
+            "inprop": "url",
+            "piprop": "thumbnail",
+            "pithumbsize": "300",
+            "pilicense": "any",
+            "gsrlimit": "20",
+            "gsrsearch": ""
+        };
+
+        return new Promise(function (resolve, reject) {
+            params.gsrsearch = encodeURIComponent(searchText);
+            // var cors = "https://crossorigin.me/";
+            var cors = ""; //"http://cors-anywhere.herokuapp.com/";
+            var url = cors + endpoint + $.param(params) + '&callback=?';
+            return $.getJSON(url, resolve);
+        });
+    }
+
+    getFeeds(city)
+        .then(function (result) {
+            var articles = result.query.pages;
+
+            var ha = $.map(articles, function (a) {
+                return {
+                    url: a.fullurl,
+                    title: a.title,
+                    sneak: a.extract
+                };
+            });
+
+            var list = ha.map(function (article) {
+                var $li = $('<li>');
+                $li.append(
+                    $('<a>')
+                        .attr('href', article.url)
+                        .text(article.title)
+                    )
+                    // .append(article.sneak)
+                    ;
+                return $li;
+            });
+
+            $wikiElem.empty().append(list);
+        });
 
     return false;
 };

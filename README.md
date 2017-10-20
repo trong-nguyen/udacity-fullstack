@@ -126,6 +126,38 @@ concat(a)
 - `VBoxManage controlvm vm_id poweroff`: stop a virtualbox machine where `vm_id` could be obtained from the above `list` command
 - `lsof -n -i4TCP:8080` check which PID occupies which port, for ex. 8080 here
 
+## jQuery
+
+- Create a virtual element with attributes and values:
+```javascript
+function dance (event) {
+    danceItOff();
+}
+
+// with a property object
+var e = $('<div>', { // no need to specify closing tag
+    href: 'https://google.com',
+    class: 'super-deco',
+    click: dance
+    });
+
+var e = $('<div>')
+    .attr('name', 'pretty') // or chaning method
+    .text('Big deal!') // or text
+    .click(dance) // or hookup events
+    ;
+
+// add children to it as you normally do to DOM elements
+anotherElm = $('<li>');
+e.append(anotherElement);
+
+// or add another virtual node
+e.append('<span></span>')
+```
+
+## Frontend
+- CORS (Cross-Origin-Resource-Sharing) is a feature that enforced by a **web browser** to allow an access of resources on server X request resources on server Y (Access-Control-Origin: `*` or `Y` or `X, Y` etc.) or not (Access-Control-Origin: X).
+
 ## Oauth2 Protocols
 ![](https://developers.google.com/accounts/images/webflow.png)
 Google's web server applications
@@ -182,5 +214,23 @@ Facebook Auth Scenario
 </html>
 ```
 
+### Preprocessing Tools
+#### Convert videos for web playback with `ffmpeg`
+```shell
+brew install ffmpeg
+ffmpeg -i [input].[inputformat] -filter:v "setpts=0.2*PTS" -s 640x480 -profile:v baseline -level 3.0 -pix_fmt yuv420p [output].[outputformat]
+```
+
+Here the parameters are:
++ `-filter:v setpts=0.2*PTS` means convert with speed up modification. Reduced frames by 0.2 means speed up playback speed 5 times, roughly. `filter:v` means video stream, likewise `:a` means audio stream
++ `-s 640x480` means adjusting the resolution by specified one.
++ `-profile:v baseline -level 3.0 -pix_fmt yuv420p` is PARTICULARLY important for web playback compatibility. It essentially says to use `baseline` profile at level 3, with pixel format `yuv420p`. This configuration proved to be compatible with Safari.
+
+
+
+
 ### Udacity Classroom Bugs
 - First Project - Movie Trailer Website: Broken links to forum
+
+## Ideas:
+- Create a website to let self-taught CS science take notes and document what they learn more conveniently, systematically and demonstrably (to the hiring parties).
