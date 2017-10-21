@@ -2,8 +2,28 @@
 <html>
 <head>
     <title></title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
+    <div id="cat-collection">
+        <button class="a-cat">Lucy</button>
+    </div>
+    <div id="cat-view">
+        <div>
+            Name: <span class="cat-name">Lucy</span>
+        </div>
+        <img src="https://media1.giphy.com/media/yXPquATCb8kGk/200_s.gif" class="cat-picture">
+        <div>
+            Was clicked: <span class="cat-clicks">9</span> times
+        </div>
+    </div>
+
+
+
+
+
+
+<!--
 <div id="meows" class="meow-container">
     <div class="meow" style="display: inline-block;">
         <img src="https://media1.giphy.com/media/yXPquATCb8kGk/200_s.gif">
@@ -49,7 +69,8 @@ meowElm.addEventListener('click', function (event) {
     var ce = event.target.parentElement.getElementsByClassName('click-display')[0];
     ce.textContent = 'Clicked ' + String(counter[clickedObject]) + ' times';
 });
-</script>
+</script> -->
+<script type="text/javascript" src="scripts.js"></script>
 </body>
 </html>
 
