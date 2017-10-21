@@ -126,6 +126,11 @@ concat(a)
 - `VBoxManage controlvm vm_id poweroff`: stop a virtualbox machine where `vm_id` could be obtained from the above `list` command
 - `lsof -n -i4TCP:8080` check which PID occupies which port, for ex. 8080 here
 
+## JavaScript
+`Array.prototype.forEach.call(lackingFunctionalitiesObject, workingFunction)`
+- Borrow the functionalities of a well-developed entity (Array, Object, String, 3rdParty) on another less-developed object. Think an object that is iterating like a list but is not quite a list (like HTMLCollection which is returned from `.getElementsByClassName()`)
+
+
 ## jQuery
 
 - Create a virtual element with attributes and values:

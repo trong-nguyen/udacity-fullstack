@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+<div id="meows" class="meow-container">
+    <div class="meow" style="display: inline-block;">
+        <img src="https://media1.giphy.com/media/yXPquATCb8kGk/200_s.gif">
+        <h5 class="cat-name"></h5>
+        <h5 class="click-display"></h5>
+    </div>
+    <div class="meow" style="display: inline-block;">
+        <img src="https://media1.giphy.com/media/yXPquATCb8kGk/200_s.gif">
+        <h5 class="cat-name"></h5>
+        <h5 class="click-display"></h5>
+    </div>
+    <div class="meow" style="display: inline-block;">
+        <img src="https://media1.giphy.com/media/yXPquATCb8kGk/200_s.gif">
+        <h5 class="cat-name"></h5>
+        <h5 class="click-display"></h5>
+    </div>
+    <div class="meow" style="display: inline-block;">
+        <img src="https://media1.giphy.com/media/yXPquATCb8kGk/200_s.gif">
+        <h5 class="cat-name"></h5>
+        <h5 class="click-display"></h5>
+    </div>
+    <div class="meow" style="display: inline-block;">
+        <img src="https://media1.giphy.com/media/yXPquATCb8kGk/200_s.gif">
+        <h5 class="cat-name"></h5>
+        <h5 class="click-display"></h5>
+    </div>
+</div>
+<div id="counter"></div>
+<script type="text/javascript">
+(function nameCats() {
+    var cats = document.getElementsByClassName('meow');
+    Array.prototype.forEach.call(cats, function (cat, i) {
+        cat.getElementsByTagName('img')[0].id = 'meow-' + String(i);
+        cat.getElementsByClassName('cat-name')[0].textContent = Math.random(4).toString(36).substr(2);
+    });
+})();
+
+var counter = [];
+var meowElm = document.getElementById('meows');
+meowElm.addEventListener('click', function (event) {
+    var clickedObject = event.target.id;
+    counter[clickedObject] = (counter[clickedObject] || 0) + 1;
+    var ce = event.target.parentElement.getElementsByClassName('click-display')[0];
+    ce.textContent = 'Clicked ' + String(counter[clickedObject]) + ' times';
+});
+</script>
+</body>
+</html>
+
+

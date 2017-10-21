@@ -55,7 +55,7 @@ function loadData(event) {
 
         $nytElem.empty().append(list);
     })
-    .error(function (event) {
+    .fail(function (event) {
         $nytElem.empty().text('Could not load NYT articles');
     });
 
@@ -78,17 +78,16 @@ function loadData(event) {
             "gsrsearch": ""
         };
 
-        return new Promise(function (resolve, reject) {
-            params.gsrsearch = encodeURIComponent(searchText);
-            // var cors = "https://crossorigin.me/";
-            var cors = ""; //"http://cors-anywhere.herokuapp.com/";
-            var url = cors + endpoint + $.param(params) + '&callback=?';
-            return $.getJSON(url, resolve);
-        });
+        params.gsrsearch = encodeURIComponent(searchText);
+        // var cors = "https://crossorigin.me/";
+        var cors = ""; //"http://cors-anywhere.herokuapp.com/";
+        var url = cors + endpoint + $.param(params) + '&callback=?';
+        X = $.getJSON(url);
+        return X;
     }
 
     getFeeds(city)
-        .then(function (result) {
+        .done(function (result) {
             var articles = result.query.pages;
 
             var ha = $.map(articles, function (a) {
@@ -112,6 +111,10 @@ function loadData(event) {
             });
 
             $wikiElem.empty().append(list);
+        })
+        .fail(function (reason) {
+            $wikiElem.empty().append('Error getting Wikipedia, error');
+            console.log('Error getting Wikipedia, error', reason);
         });
 
     return false;
