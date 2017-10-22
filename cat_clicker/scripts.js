@@ -1,4 +1,4 @@
-var octopus = (function main() {
+var main = (function () {
     var model = (function() {
         var cats = [
             {
@@ -23,39 +23,53 @@ var octopus = (function main() {
 
         return {
             cats: cats,
-            currentCat: currentCat,
+
             init: function () {
                 cats.forEach(function (cat) {
                     cat.clicks = 0;
                 });
+            },
+
+            getCurrentCat: function () {
+                return cats[currentCat];
+            },
+
+            setCurrentCat: function (id) {
+                if (id >= 0 && id < cats.length) {
+                    currentCat = id;
+                } else {
+                    console.log('invalid cat id', id);
+                }
+            },
+
+            increaseCurrentCatClicks: function () {
+                ++cats[currentCat].clicks;
             }
         }
     })();
 
-    var view = (function () {
-        // Grasping Dom Elements and initial templates
+    // utility functions
+    function removeChildren (elm) {
+        elm.innerHTML = "";
+    }
+
+    function getFirstByClass (elm, cls) {
+        return elm.getElementsByClassName(cls)[0];
+    }
+
+
+    var catCollectionView = (function () {
         var $collection = document.getElementById('cat-collection');
-        var singleCatTemplate = $collection.firstElementChild.cloneNode();
-        var $catView = document.getElementById('cat-view');
-
-
-        function removeChildren (elm) {
-            elm.innerHTML = "";
-        }
-
-        function getFirstByClass (elm, cls) {
-            return elm.getElementsByClassName(cls)[0];
-        }
+        var singleCatTemplate = $collection.firstElementChild.cloneNode(true);
 
         return {
-            collection: $collection,
-            catView: $catView,
-
-            renderCatCollection: function (collection) {
+            elm: $collection,
+            render: function (collection) {
                 var cats = collection.map(function (catData, idx) {
-                    var cat = singleCatTemplate.cloneNode();
-                    cat.textContent = catData.name;
-                    cat.id = idx;
+                    var cat = singleCatTemplate.cloneNode(true);
+                    var catButton = cat.getElementsByTagName('button')[0];
+                    catButton.textContent = catData.name;
+                    catButton.id = idx;
                     return cat;
                 });
 
@@ -63,47 +77,58 @@ var octopus = (function main() {
                 cats.forEach(function (cat) {
                     $collection.append(cat);
                 });
-            },
-
-            renderCatView: function(cat) {
-                getFirstByClass($catView, 'cat-name').textContent = cat.name;
-                getFirstByClass($catView, 'cat-picture').setAttribute('src', cat.picture);
-                getFirstByClass($catView, 'cat-clicks').textContent = cat.clicks;
             }
-        }
+        };
     })();
 
-    var octopus = new (function () {
+    var catView = (function () {
+        // Grasping Dom Elements and initial templates
+        var $elm = document.getElementById('cat-view');
+
+        return {
+            elm: $elm,
+            render: function(cat) {
+                getFirstByClass($elm, 'cat-name').textContent = cat.name;
+                getFirstByClass($elm, 'cat-picture').setAttribute('src', cat.picture);
+                getFirstByClass($elm, 'cat-clicks').textContent = cat.clicks;
+            }
+        };
+
+    })();
+
+    var octopus = (function () {
         function setCurrentCat (id) {
             var id = Number(id);
             if (id < model.cats.length) {
-                model.currentCat = id;
-                view.renderCatView(model.cats[id]);
+                model.setCurrentCat(id);
+                catView.render(model.getCurrentCat());
             } else {
                 console.log('Error setting cat current', id);
             }
         };
 
-        this.init = function () {
-            model.init();
+        return {
+            init: function () {
+                model.init();
 
-            view.renderCatCollection(model.cats);
-            setCurrentCat(0);
+                catCollectionView.render(model.cats);
+                setCurrentCat(0);
 
-            var pic = view.catView.getElementsByClassName('cat-picture')[0];
-            pic.addEventListener('click', function (event) {
-                ++model.cats[model.currentCat].clicks;
-                view.renderCatView(model.cats[model.currentCat]);
-            });
+                var pic = catView.elm.getElementsByClassName('cat-picture')[0];
+                pic.addEventListener('click', function (event) {
+                    model.increaseCurrentCatClicks();
+                    catView.render(model.getCurrentCat());
+                });
 
-            view.collection.addEventListener('click', function (event) {
-                console.log(event.target.id);
-                setCurrentCat(event.target.id);
-            });
+                catCollectionView.elm.addEventListener('click', function (event) {
+                    console.log(event.target.id);
+                    setCurrentCat(event.target.id);
+                });
+            }
         };
     })();
 
     return octopus;
 })();
 
-octopus.init();
+main.init();
