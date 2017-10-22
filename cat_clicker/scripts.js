@@ -22,12 +22,14 @@ var main = (function () {
         var currentCat = 0;
 
         return {
-            cats: cats,
-
             init: function () {
                 cats.forEach(function (cat) {
                     cat.clicks = 0;
                 });
+            },
+
+            getAllCats: function () {
+                return cats;
             },
 
             getCurrentCat: function () {
@@ -44,6 +46,29 @@ var main = (function () {
 
             increaseCurrentCatClicks: function () {
                 ++cats[currentCat].clicks;
+            },
+
+            updateCat: function (details) {
+                // return true if successfully updated
+                // false if not
+
+                var cat = cats[currentCat];
+
+                details.clicks = Number(details.clicks);
+
+                if (details.name !== undefined &&
+                    details.picture !== undefined &&
+                    details.clicks !== undefined &&
+                    details.clicks === details.clicks) {
+
+                    ['name', 'picture', 'clicks'].forEach(function (x) {
+                        cat[x] = details[x];
+                    });
+
+                    return true;
+                } else {
+                    return false;
+                }
             }
         }
     })();
@@ -96,22 +121,60 @@ var main = (function () {
 
     })();
 
+    var adminView = (function () {
+        var $elm = document.getElementById('admin-view');
+        var $adminForm = document.getElementById('admin-form');
+
+        return {
+            adminForm: $adminForm,
+            adminBtn: document.getElementById('btn-admin'),
+            submitBtn: document.getElementById('btn-submit'),
+            cancelBtn: document.getElementById('btn-cancel'),
+
+            render: function (cat) {
+                document.getElementById('i-cat-name').value = cat.name;
+                document.getElementById('i-cat-picture').value = cat.picture;
+                document.getElementById('i-cat-clicks').value = cat.clicks;
+            },
+
+            getCatInputs: function () {
+                return {
+                    name: document.getElementById('i-cat-name').value,
+                    picture: document.getElementById('i-cat-picture').value,
+                    clicks: document.getElementById('i-cat-clicks').value,
+                }
+            }
+        };
+    })();
+
     var octopus = (function () {
         function setCurrentCat (id) {
             var id = Number(id);
-            if (id < model.cats.length) {
+            if (id < model.getAllCats().length) {
                 model.setCurrentCat(id);
                 catView.render(model.getCurrentCat());
+                adminView.render(model.getCurrentCat());
             } else {
                 console.log('Error setting cat current', id);
             }
         };
 
+        function showAdmin () {
+            adminView.render(model.getCurrentCat());
+            adminView.adminForm.hidden = false;
+            adminView.adminBtn.hidden = true;
+        };
+
+        function hideAdmin() {
+            adminView.adminForm.hidden = true;
+            adminView.adminBtn.hidden = false;
+        }
+
         return {
             init: function () {
                 model.init();
 
-                catCollectionView.render(model.cats);
+                catCollectionView.render(model.getAllCats());
                 setCurrentCat(0);
 
                 var pic = catView.elm.getElementsByClassName('cat-picture')[0];
@@ -121,8 +184,38 @@ var main = (function () {
                 });
 
                 catCollectionView.elm.addEventListener('click', function (event) {
-                    console.log(event.target.id);
                     setCurrentCat(event.target.id);
+                });
+
+                // open admin forms
+                adminView.adminBtn.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    showAdmin();
+                    return false;
+                });
+
+                // submit updates
+                adminView.submitBtn.addEventListener('click', function (event) {
+                    event.preventDefault();
+
+                    var details = adminView.getCatInputs();
+                    if (model.updateCat(details)) {
+                        var cat = model.getCurrentCat();
+                        adminView.render(cat);
+                        catView.render(cat);
+                        catCollectionView.render(model.getAllCats());
+                    } else {
+                        console.log('Failed to update cat with details', details);
+                    }
+
+                    return false;
+                });
+
+                // close admin forms
+                adminView.cancelBtn.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    hideAdmin();
+                    return false;
                 });
             }
         };
