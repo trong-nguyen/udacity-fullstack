@@ -101,3 +101,7 @@ ENV/
 .mypy_cache/
 
 .DS_Store
+.gitignore
+
+# Database
+*.db

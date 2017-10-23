@@ -7,11 +7,12 @@
     <link rel="stylesheet" href="">
 </head>
 <body>
-    <div class="cat-app">
+    <div class="cat-app" data-bind="with:catModel">
         <h3 data-bind="text: name">Tom</h3>
         <h5>Level: <span data-bind="text: level"></span></h5>
         <h5>Clicks: <span data-bind="text: clicks">2017</span></h5>
-        <img src="" alt="A Cat Picture" data-bind="attr: {src: url}, click: increaseClicks">
+        <img src="" alt="A Cat Picture" data-bind="attr: {src: url}, click: $parent.increaseClicks">
+        <h5>Nicknames:</h5>
         <ul data-bind="foreach: nickNames">
             <li data-bind="text: $data"></li>
         </ul>
