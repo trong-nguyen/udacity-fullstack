@@ -37,6 +37,15 @@ Surprisingly (or not) by that definition, `tel:+1 728 9239` **is** a URI!!!
 - CRUD functionalities
 - API endpoints
 
+### Separation of Concerns Or How to deal with legacy / spaghetti codes
+Depending on the level or the scale of the spaghetti-ness of the code part of interests, you have 2 options:
+- If the part is not the entirety of the whole, meaning most of the code is not very horrible, you can locate that part and refactor it. It can be thought as the process of finding the strongly connected components in Graph Theory Languague. And your task is to find the component that badly connects to everything else and change it:
+![](https://www.researchgate.net/profile/Katy_Borner/publication/259043184/figure/fig3/AS:297121283624963@1447850642815/Figure-3-Component-structure-of-directed-networks-such-as-the-WWW-Adopted-from-Broder.png)
+- If you speculate and (fully or partially) verify that most of the code is highly coupled or in Graph Theory, a complete graph, just rewrite the whole thing.
+![](https://cdn2.hubspot.net/hubfs/468123/spaghetti_code3_blog-illustrations.png)
+
+Don't forget to do tests.
+
 ### CSS Layout Structure
 #### Flows
 

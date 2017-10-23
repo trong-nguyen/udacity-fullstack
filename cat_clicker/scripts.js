@@ -180,7 +180,9 @@ var main = (function () {
                 var pic = catView.elm.getElementsByClassName('cat-picture')[0];
                 pic.addEventListener('click', function (event) {
                     model.increaseCurrentCatClicks();
-                    catView.render(model.getCurrentCat());
+                    var cc = model.getCurrentCat();
+                    catView.render(cc);
+                    adminView.render(cc);
                 });
 
                 catCollectionView.elm.addEventListener('click', function (event) {
