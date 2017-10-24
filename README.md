@@ -139,6 +139,33 @@ concat(a)
 `Array.prototype.forEach.call(lackingFunctionalitiesObject, workingFunction)`
 - Borrow the functionalities of a well-developed entity (Array, Object, String, 3rdParty) on another less-developed object. Think an object that is iterating like a list but is not quite a list (like HTMLCollection which is returned from `.getElementsByClassName()`)
 
+### `apply` vs. `call` vs. `bind`
+- All three modify *context*s of defined functions. *context* is technically the `this` variable in JavaScript.
+```javascript
+function func(x, y) {
+    console.log('Context variable is', this.z);
+    console.log('First variable is', x);
+    console.log('Second variable is', y);
+}
+
+var context = {z: 9};
+
+func.call(context, 1, 2); // params passed as usual
+func.apply(context, [1, 2]); // params passed as list
+
+newFunc = func.bind(context);
+newFunc(1, 2); // invoked later
+
+// results for all three:
+/*
+Context variable is 9
+First variable is 1
+Second variable is 2
+*/
+```
+- `apply` and `call` vs. `bind`: `apply` and `call` invokes functions immediately. `bind` returns a new function with a modified context. `bind` is analogous to Python's decorators.
+- `apply` vs. `call`: `call` takes variables [1:] and passes it to the function, while `apply` takes variable [1], assumed a list, unpacks it and passed the unpacked items to the function.
+
 
 ## jQuery
 
