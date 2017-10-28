@@ -136,6 +136,26 @@ concat(a)
 - `lsof -n -i4TCP:8080` check which PID occupies which port, for ex. 8080 here
 
 ## JavaScript
+- [Best practices and conventions from Airbnb](https://github.com/airbnb/javascript)
+
+- Make use of `Promise.all()` to load app asynchronously while guaranteeing app is only functioning if all promises are resolved.
+
+```javascript
+allComponentsLoaded = Promise.all([
+    component1.init(),
+    component2.fetch(),
+    component3.load()
+    ]);
+
+allComponentsLoaded.then(function () {
+    app = new App(dependentAndLoadedComponents);
+    app.wireDependencies();
+    app.run();
+    })
+```
+
+- Class constructors must only return instances, asynchrounous activities should happen either in: 1)pre-construction in loading process or 2) on-the-fly or on-demand. In general, any component depending on asynchronous functions should not be dependencies of deterministic components.
+
 `Array.prototype.forEach.call(lackingFunctionalitiesObject, workingFunction)`
 - Borrow the functionalities of a well-developed entity (Array, Object, String, 3rdParty) on another less-developed object. Think an object that is iterating like a list but is not quite a list (like HTMLCollection which is returned from `.getElementsByClassName()`)
 
