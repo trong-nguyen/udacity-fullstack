@@ -30,6 +30,9 @@ Surprisingly (or not) by that definition, `tel:+1 728 9239` **is** a URI!!!
 - Basic READ action with username/password login
 `curl -u myusernam:mypassword http:desiredurl`
 
+### Web APIs
+Web APIs, regardless of their problems and solutions (and the technologies they used to solve), agree in physical (e.g geographically) regards. For example, many APIs (Foursquare, Google Map, Twitter, Yelp) have a search endpoint that take in or return a `latlng` or some kind of `geocode` parameter. By utilizing this common, we can compose an API that internally patches together multiple APIs, which eventually solve our own problem. The point is all APIs aim to solve some real-world problems so it might not be so surprized that they have real-word constraints and approaches.
+
 ### Steps in Iterative Development
 - Mockups
 - Routing
