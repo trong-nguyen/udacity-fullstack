@@ -1,57 +1,45 @@
-import requests
+import os
 import json
+import urllib
 
+# external libs
+import requests
 
 def respond(err, res=None):
     return {
         'statusCode': '400' if err else '200',
-        'body': err.message if err else json.dumps(res),
+        'body': err.message if err else res,
         'headers': {
             'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
         },
     }
 
-def fetch_tweets(query, lat, lng, radius):
+def fetch_tweets(query_string):
     url = 'https://api.twitter.com/1.1/search/tweets.json?'
-    access_token = (
-        'AAAAAAAAAAAAAAAAAAAAACXh2wAAAAAAKnNMrhBLJYhb5pC1aHWq3rbIPvc%'
-        '3DmygjYj9WtadxcKbVceo9pnzLB3ZFLRL4VuGcGeVVrPaDQcJyBG'
-        )
+    access_token = os.environ['TWITTER_ACCESS_TOKEN']
 
     headers = {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer {}'.format(access_token)
     }
-    params = {
-        'q'       : query,
-        'geocode' : '{},{},{}'.format(lat, lng, radius)
-    }
 
-    response = requests.get(url, params=params, headers=headers)
+    response = requests.get(url + query_string, headers=headers)
 
-    return response.json()
+    return response.content
 
 
 def handler(event, context):
-    '''Demonstrates a simple HTTP endpoint using API Gateway. You have full
-    access to the request and response payload, including headers and
-    status code.
-
-    To scan a DynamoDB table, make a GET request with the TableName as a
-    query string parameter. To put, update, or delete an item, make a POST,
-    PUT, or DELETE request respectively, passing in the payload to the
-    DynamoDB API as a JSON body.
+    '''
+    A simple catch - adding auth - request and return kind of proxy server
+    The handle forward the entire query string to 3rd party API
+    only adding authentication credentials if neccessary
     '''
 
-    data = fetch_tweets(
-        query  = 'Luke\'s Lobster',
-        lat    = 41.874882,
-        lng    = -87.642227,
-        radius = '5mi'
-        )
+    query_string = urllib.urlencode(event['queryStringParameters']);
+    data = fetch_tweets(query_string)
 
-    return respond(None, json.dumps(data))
-
-
-# if __name__ == '__main__':
-#     print(handler(0,0))
+    # depending on wheather proxy integration is used
+    # data should be in serialized or plain dict form
+    # status code, headers and body mus be present in the response
+    return respond(None, data)
