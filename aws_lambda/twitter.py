@@ -11,6 +11,26 @@ def respond(err, res=None):
         },
     }
 
+def fetch_tweets(query, lat, lng, radius):
+    url = 'https://api.twitter.com/1.1/search/tweets.json?'
+    access_token = (
+        'AAAAAAAAAAAAAAAAAAAAACXh2wAAAAAAKnNMrhBLJYhb5pC1aHWq3rbIPvc%'
+        '3DmygjYj9WtadxcKbVceo9pnzLB3ZFLRL4VuGcGeVVrPaDQcJyBG'
+        )
+
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer {}'.format(access_token)
+    }
+    params = {
+        'q'       : query,
+        'geocode' : '{},{},{}'.format(lat, lng, radius)
+    }
+
+    response = requests.get(url, params=params, headers=headers)
+
+    return response.json()
+
 
 def handler(event, context):
     '''Demonstrates a simple HTTP endpoint using API Gateway. You have full
@@ -22,10 +42,16 @@ def handler(event, context):
     PUT, or DELETE request respectively, passing in the payload to the
     DynamoDB API as a JSON body.
     '''
-    print("Received event: " + json.dumps(event, indent=2))
 
-    return respond(None, {
-        'message' : 'Hello Lambda!',
-        # 'event'   : json.dumps(event),
-        # 'context' : json.dumps(context)
-        })
+    data = fetch_tweets(
+        query  = 'Luke\'s Lobster',
+        lat    = 41.874882,
+        lng    = -87.642227,
+        radius = '5mi'
+        )
+
+    return respond(None, json.dumps(data))
+
+
+# if __name__ == '__main__':
+#     print(handler(0,0))
