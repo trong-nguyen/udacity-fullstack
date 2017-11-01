@@ -5,16 +5,6 @@ import urllib
 # external libs
 import requests
 
-def respond(err, res=None):
-    return {
-        'statusCode': '400' if err else '200',
-        'body': err.message if err else res,
-        'headers': {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*'
-        },
-    }
-
 class Proxy(object):
     def __init__(self):
         super(Proxy, self).__init__()
@@ -27,19 +17,22 @@ class Proxy(object):
             'Content-Type': 'application/json',
         }
 
+    def get_url(self):
+        return self.URL
+
     def fetch(self, params):
         response = requests.get(
-            url     = self.URL + self.build_query(params),
+            url     = self.get_url() + self.build_query(params),
             headers = self.build_headers()
         )
 
-        return response.content
+        return response
 
-class TweeterProxy(Proxy):
+class TwitterProxy(Proxy):
     URL = 'https://api.twitter.com/1.1/search/tweets.json?'
 
     def build_headers(self):
-        headers = super(TweeterProxy, self).build_headers()
+        headers = super(TwitterProxy, self).build_headers()
         access_token = os.environ['TWITTER_ACCESS_TOKEN']
         headers.update({
             'Authorization': 'Bearer {}'.format(access_token)
@@ -63,7 +56,6 @@ class FoursquareProxy(Proxy):
 
         return super(FoursquareProxy, self).build_query(params)
 
-
 def base_handler(proxy):
     '''
     A simple catch - adding auth - request and return kind of proxy server
@@ -76,8 +68,38 @@ def base_handler(proxy):
     # data should be in serialized or plain dict form
     # status code, headers and body mus be present in the response
     def handler(event, context):
-        params = event['queryStringParameters']
-        data = fetcher.fetch(params)
-        return respond(None, data)
+        response_headers = {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+        }
+
+        try:
+            params = event['queryStringParameters']
+            r = fetcher.fetch(params)
+
+            return {
+                'statusCode' : r.status_code,
+                'body'       : r.content,
+                'headers'    : response_headers
+            }
+
+        except:
+            return {
+                'statusCode' : '400',
+                'body'       : 'Exception thrown while fetching data',
+                'headers'    : response_headers
+            }
 
     return handler
+
+def make_proxy_handler(name):
+    proxy = None
+
+    if name == 'Twitter':
+        proxy = TwitterProxy
+    elif name == 'Foursquare':
+        proxy = FoursquareProxy
+    else:
+        raise ValueError('Invalid proxy: {}'.format(name))
+
+    return base_handler(proxy)

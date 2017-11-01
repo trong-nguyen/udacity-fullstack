@@ -1,5 +1,3 @@
-from trongn.proxies import TweeterProxy, base_handler
+from trongn.proxy import make_proxy_handler
 
-handler = base_handler(TweeterProxy)
-
-
+handler = make_proxy_handler('Foursquare')
