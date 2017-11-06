@@ -24,6 +24,18 @@ URLs and URNs are URIs. All refer to resources (letter R). For example, in http:
 
 Surprisingly (or not) by that definition, `tel:+1 728 9239` **is** a URI!!!
 ![](https://danielmiessler.com/images/URI-vs.-URL-e1464829000786.png)
+
+### AWS cheat-sheets
+- Creating a folder (or an S3 object), note that the `--region` parameter is required if the region of the targeted bucket is different from the default region (i.e. *us-east-1* *us-east-2*, etc):
+
+`aws s3api put-object --bucket [BUCKET_NAME] --key [FOLDER_NAME]/ --region [REGION_NAME]`
+
+- Removing a folder:
+
+`aws s3 rm s3://[BUCKET_NAME]/[PATH_TO_FOLDER] --region [REGION_NAME]`
+
+
+
 ### cURL tips
 - Basic POST action with JSON data:
 `curl -X POST -H "Content-Type: application/json" http:desiredurl -d '{"k1":"v1", "k2":"v2"}'`
