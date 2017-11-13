@@ -1,4 +1,4 @@
-# Learning Full stack with Udacity
+# Full-stack Web Development
 
 ## Jump-start Toolkits
 - Rolling a demonstrative server with shell + ncat:
@@ -233,6 +233,47 @@ e.append('<span></span>')
 
 ## Frontend
 - CORS (Cross-Origin-Resource-Sharing) is a feature that enforced by a **web browser** to allow an access of resources on server X request resources on server Y (Access-Control-Origin: `*` or `Y` or `X, Y` etc.) or not (Access-Control-Origin: X).
+- Make [GoogleMap section responsive](https://stackoverflow.com/a/15668970/8849793).
+
+```html
+<!--
+create a container
+apply styles / layout to the container, not the actual google map.
+The google-map element is styled as above.
+-->
+<div class="gmap-container">
+    <div id="google-map"></div>
+</div>
+```
+
+- RequireJS might be obsolete when ES6 is becoming the norm but it was great at the time. RequireJS is a module loader, advocates for AMD (asynchronous) module format but also support non-AMD, conventional global variable attached scripts (those that attach themselve to `window` when loaded).
+    + AMD specification requires a handshake from supporting modules - which check for a global `define` function and return the actual codes in the `define` scopes.
+    + To load non-AMD modules by RequireJS, we need to use the `shim` option in `require.config`. It wraps module in a scope and register it loadable by other modules. Google Maps JS API could be successfully loaded by using the `shim` option.
+```javascript
+require.config({
+    paths: {
+        module: 'non_amd_external_or_packaged_library' // without .js extension
+    },
+
+    shim: {
+        deps: [dependency_list_of_module],
+        exports: 'module_name' // which will be available as a window-attached module (window.module_name)
+    }
+});
+
+```
+
+-
+    + A quirky thing about RequireJS and AMD is that if an AMD module was defined as a named module (to ensure integrity or universal recognition of the library). The exact name must be used in the `path` config. Examples: jQuery `jquery` and Twitter Widgets JS `twttr`
+
+```javascript
+require.config({
+    paths: {
+        jquery: '//cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min' // must be exactly jquery, not jQuery not jq, nor $.
+    }
+});
+
+```
 
 ## Oauth2 Protocols
 ![](https://developers.google.com/accounts/images/webflow.png)
@@ -262,7 +303,42 @@ OAuth Flow:
 5. On receiving the CODE, the web server send it to the auth provider and get back an ACCESS TOKEN (and probably an REFRESH TOKEN). Using the ACCESS TOKEN the web server can identify the user and obtain necessary information from the user.
 
 ![](https://scontent.fsgn5-4.fna.fbcdn.net/v/t39.2178-6/851584_503291546407012_1005168000_n.png?oh=b0af1d36bb8c4da5881739e7da0e371d&oe=5A409E8A)
+
 Facebook Auth Scenario
+
+## Serverless services with AWS Lambda and API Gateway
+
+The idea is you only need to care about the logic part of your services, not the infrastructures that they run on. Literally, it is the Python code or Node code that you have to pay attention to, not the Linux server / or Windows IIS / plus WSGI / on Nginx / or Apache / Load balancing and a slew of other DevOps aspects and services that you normally have to setup and maintain, for example, on EC2 instances.
+
+To be clear, with Amazon Web Services you define and manage the meat of your services (the codes) with Lambda. And all other things (API interface, documentation, access points, routing, request / response configurations) with API Gateway.
+
+### Example project
+[Build a proxy server that ports request and attaches authentication from a web app to popular APIs such as Twitter, Yelp and Foursquare](https://github.com/trong-nguyen/udacity-fullstack/tree/master/aws_lambda). Why do we need a proxy you may ask? Most modern APIs requires some form of consumer identification (it could be the webapp that built on top of those APIs or a web client that provides user interfaces to interact with such APIs).
+
+The identification process manifests into different protocals and schemes from classic username - password authentication to standard OAuth processes.
+- For simple client API consumer, browser-based OAuth applications are widely available to enable actual users (humans) identify themselves with the API they want to access (such as Google+ or Facebook login).
+- For web-app scenarios, the communication is between a 3rd-party app and API providers. The API providers specifically distingush these kind of communications as server-side access and consequently enforce server-side authentication and authorization, which means we need a server key / token to consume their APIs. These kind of keys / tokens being server-side are presumably not to be exposed to end-users (those that consume the app, or the humans).
+
+Technically it is impossible to protect these secrets (keys, tokens) if you only have a browser-only web app. The proper way to implement authentication for web apps is to have a backend that receives authenticated requests from your browser-client and do the server-server communication. A single authentication channel (which might utilize many available identification services - Google+ / Facebook / Microsoft) is needed from the client to your backend. But if you want your services public just leave it out, accepts and proxies all requests. In this way, your server secrets are properly protected. Web app done right!
+
+Untill now, serverless architecture has no specific role in web app developement we discussed thus far. However if you want to stay lean yet insists on security and performance, you can rely on serverless services such as AWS Lambda + API Gateway or Google Cloud to build your **backend** and, obviously secure your secrets.
+
+### Example implementation in AWS Lambda + API Gateway
+
+Serverless architecture definitely requires some getting used to such as how to build a Lambda function, to deploy it with API gateway, but basically the steps required are:
+- Implement service code(s):
+    + Accepts requests from API Gateway (in a specific format)
+    + Processes, applies business logics (probably calling other APIs, with authentication)
+    + Returns a handler (a function that wraps the above two steps) to callers
+- Deploy code to AWS Lambda:
+    + Package your code, along with all non-built in libraries that your code depends on in a Zip format and upload it to AWS Lambda (with CLI `aws lambda create-function / update-function-code` or AWS console interface).
+    + Test, add environment variables, to your deployed Lambda function.
+- Build access points to your function:
+    + Create an API in API gateway
+    + Customize requests / responses cycle (adding CORS, error handling, etc.)
+    + Hook up an API method to your deployed Lambda function
+    + Deploy your API in prod/dev stages, apply throtling, use plans (limit calling quota).
+
 
 ## Templates
 
@@ -309,4 +385,5 @@ Here the parameters are:
 - First Project - Movie Trailer Website: Broken links to forum
 
 ## Ideas:
-- Create a website to let self-taught CS science take notes and document what they learn more conveniently, systematically and demonstrably (to the hiring parties).
+- Create a website to let self-taught CS students take notes and document what they learn more conveniently, systematically and demonstrably (to the hiring parties).
+- A tool to help recruiters build personas from Github repo. Like how active a person is (contrib/day or month), how is his working habit, which languages he used, etc.

@@ -143,7 +143,9 @@ def base_handler(proxy):
                 'headers'    : response_headers
             }
 
-        except:
+        except Exception as e:
+            print(e) # print the cause
+
             return {
                 'statusCode' : '400',
                 'body'       : 'Exception thrown while fetching data',
