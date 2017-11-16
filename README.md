@@ -17,6 +17,84 @@ etc.                <---->     etc.
 `sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder`
 - Keep local and remote directories in sync with `lsyncd`, reference [here](https://serverfault.com/a/485808)
 - Versioning is a standard practice to ease the pain of API changes (or transitions), allowing API consumers sufficient time to upgrade their code base, before officially ending an old API version.
+- All text related commands explained
+```shell
+$cat   # dump the content to stdout / directed channel (by stream operator ">" )
+$touch # update file timestamps, create 0 kb files if not existed
+$nano  # file editor, standard or not depending on platforms.
+       # as for
+       $vim
+       $vi
+       $emacs
+```
+- Administrative Linux commands:
+
+```shell
+# read the manual of a command
+$man [COMMAND]
+
+# List recent activities on the machine
+$finger [USERNAME]
+# or
+$cat /etc/passwd
+    # and with filter
+    $cat /etc/passwd | grep "[FILTERING_WORDS]"
+
+# Add users (requires sudo)
+$sudo adduser
+
+# permission
+```
+
+## Linux file permission model
+
+Commands:
+```shell
+$chmod [OCTAL_PERMISSION. ex 744] [FILE/DIR_NAME.] # change permission
+$chown [NEW_OWNER] [FILE/DIR_NAME.]                # change the owner
+$chgrp [NEW_GROUP] [FILE/DIR_NAME.]                # change the group
+```
+
+A standard text-based permission description has this form (when type `$ls [FILE/DIR] -al`). The 10-character length string
+
+Example of `ls [DIR] -al` command
+
+```shell
+drwxr-xr-x 6 vagrant vagrant    4096 Jul 24 13:58 redis-stable
+-rw-r--r-- 1 root    root    1743687 Jul 24 13:59 redis-stable.tar.gz
+drwx------ 2 vagrant root       4096 Sep 15 07:55 .ssh
+```
+
+can be intepreted as:
+
+|permission string| hard links | owner | group | size | last modified | name |
+|-|-|-|-|-|-|-|
+|drwxr-xr-x | 6 | vagrant | vagrant |    4096 | Jul 24 13:58 | redis-stable|
+|-rw-r--r-- | 1 | root |    root |    1743687 | Jul 24 13:59 | redis-stable.tar.gz|
+|drwx------ | 2 | vagrant | root |       4096 | Sep 15 07:55 | .ssh|
+
+and the permission string can be dissected further:
+
+|position|value|description|targeting|
+|--------|-----|-----------|----------------|
+|0.      |d  |  is directory or not | |
+|1.      |r  |  Read permission    | Owner |
+|2.      |w  |  Write permission   | Owner |
+|3.      |x  |  eXecute permission | Owner |
+|4.      |r  |  Read permission    | Group |
+|5.      |w  |  Write permission   | Group |
+|6.      |x  |  eXecute permission | Group |
+|7.      |r  |  Read permission    | Public |
+|8.      |w  |  Write permission   | Public |
+|9.      |x  |  eXecute permission | Public |
+
+where the value (either d or r/w/x) if present implies allowed (or is), dash (-) disallowed.
+
+### Summary
+![](https://www.ics.uci.edu/computing/bin/img/perms1.png)
+
+***The logic behind number-based permission forms and text-based permission forms***: the former can be converted to the latter by noticing that for each permission target (owner / group / public), there are 3 rights (rwx) which theoretically translates to 8 possibilities (2<sup>3</sup>). Therefore each permission target can be represented by a number from 0 to 7. Then a full text-based permission form `rwxrwxrwx` can be translated to a number-based permission form of `777`. Another example would be `rw-` = 1 x 2 <sup>2</sup> + 1 x 2<sup>1</sup> + 0 x 2<sup>0</sup>. The number-based labeling has a simple name of octal permissions.
+
 ### URN, URL and URI
 Reference is right [here](https://danielmiessler.com/study/url_vs_uri/)
 
@@ -246,6 +324,10 @@ The google-map element is styled as above.
 </div>
 ```
 
+![](http://gregfranko.com/images/requirejs.png)
+
+[Understanding RequireJS, you should read this](https://www.devbridge.com/articles/understanding-amd-requirejs/) and [How to use Bootstrap with RequireJS](https://getfishtank.ca/blog/how-to-use-bootstrap-3-with-requirejs)
+
 - RequireJS might be obsolete when ES6 is becoming the norm but it was great at the time. RequireJS is a module loader, advocates for AMD (asynchronous) module format but also support non-AMD, conventional global variable attached scripts (those that attach themselve to `window` when loaded).
     + AMD specification requires a handshake from supporting modules - which check for a global `define` function and return the actual codes in the `define` scopes.
     + To load non-AMD modules by RequireJS, we need to use the `shim` option in `require.config`. It wraps module in a scope and register it loadable by other modules. Google Maps JS API could be successfully loaded by using the `shim` option.
@@ -323,6 +405,8 @@ Technically it is impossible to protect these secrets (keys, tokens) if you only
 
 Untill now, serverless architecture has no specific role in web app developement we discussed thus far. However if you want to stay lean yet insists on security and performance, you can rely on serverless services such as AWS Lambda + API Gateway or Google Cloud to build your **backend** and, obviously secure your secrets.
 
+![](https://d1.awsstatic.com/Test%20Images/MasonTests/Lambda_WebApplications.c89e27ca2ef46c59e15107e9f5ede25dc0829207.png)
+
 ### Example implementation in AWS Lambda + API Gateway
 
 Serverless architecture definitely requires some getting used to such as how to build a Lambda function, to deploy it with API gateway, but basically the steps required are:
@@ -336,7 +420,7 @@ Serverless architecture definitely requires some getting used to such as how to 
 - Build access points to your function:
     + Create an API in API gateway
     + Customize requests / responses cycle (adding CORS, error handling, etc.)
-    + Hook up an API method to your deployed Lambda function
+    + Hook up an API method (GET/POST) to your deployed Lambda function
     + Deploy your API in prod/dev stages, apply throtling, use plans (limit calling quota).
 
 
