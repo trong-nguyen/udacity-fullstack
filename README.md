@@ -18,8 +18,15 @@ etc.                <---->     etc.
 - Keep local and remote directories in sync with `lsyncd`, reference [here](https://serverfault.com/a/485808)
 - Versioning is a standard practice to ease the pain of API changes (or transitions), allowing API consumers sufficient time to upgrade their code base, before officially ending an old API version.
 - All text related commands explained
+- Jenkins instead of cron jobs.
+
 ```shell
 $cat   # dump the content to stdout / directed channel (by stream operator ">" )
+$more
+$less
+$view
+$tail  # remember this when I submitted jobs to compute clusters (atlas4/5/6/7), to follow what flyh.ext dumped output to stdout
+
 $touch # update file timestamps, create 0 kb files if not existed
 $nano  # file editor, standard or not depending on platforms.
        # as for
@@ -43,7 +50,18 @@ $cat /etc/passwd
 # Add users (requires sudo)
 $sudo adduser
 
-# permission
+# list all local users
+$cut -d: -f1 /etc/passwd
+
+# switch to another user (the polite way)
+su - [USERNAME]
+# or the bossy way, you can login as any user if having sudo privileges
+sudo su - [USERNAME] # think about this as a forceful (sudo) login
+
+# a user with sudo privileges could run commands as any user with
+sudo -u [OTHER_USERNAME] [COMMAND]
+# ex.
+sudo -u postgres createuser tester # run the command, as if he is user postgres, to create PostgreSQL usernamed tester
 ```
 
 ## Linux file permission model
@@ -111,7 +129,6 @@ Surprisingly (or not) by that definition, `tel:+1 728 9239` **is** a URI!!!
 - Removing a folder:
 
 `aws s3 rm s3://[BUCKET_NAME]/[PATH_TO_FOLDER] --region [REGION_NAME]`
-
 
 
 ### cURL tips
@@ -463,7 +480,22 @@ Here the parameters are:
 + `-profile:v baseline -level 3.0 -pix_fmt yuv420p` is PARTICULARLY important for web playback compatibility. It essentially says to use `baseline` profile at level 3, with pixel format `yuv420p`. This configuration proved to be compatible with Safari.
 
 
+## Miscelaneous tips
 
+### Help Github detect the correct language of your repo
+
+- Github uses github-linguist internally to dectect your primary languages.
+- This has minor cosmetic effects on your displayed repo, like how many percentages of yours is Python, C++, Javascript, etc. But it might be important in case you want to showcase resume / portfolio.
+- Give Github hints by adding an `.gitattributes` and follow documentation of [github-linguist](https://github.com/github/linguist) to ignore files in statistics summary.
+- Basically:
+```git
+path1/everything/mark/as/vendor/* linguist-vendored # or linguist-vendored=true
+path2/documentation/mark/as/documentation/* linguist-documentation # or =true
+path3/generated/or/minified/files/* linguist-generated # or =true
+```
+- Install `gem install github-linguist` to check locally
+- Run `linguist [PATH] --breakdown` to read statistics, this will be identical to what Github reports.
+- And remember it only takes effect after **commits**. So, commit if you want to view changes.
 
 ### Udacity Classroom Bugs
 - First Project - Movie Trailer Website: Broken links to forum
