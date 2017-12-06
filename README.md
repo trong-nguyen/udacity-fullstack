@@ -498,24 +498,28 @@ path3/generated/or/minified/files/* linguist-generated # or =true
 - And remember it only takes effect after **commits**. So, commit if you want to view changes.
 
 ### Git - Mercurial
-Same local repo pushes to different server repos, e.g one is git (github), the other mercurial (bitbucket).
-- Follow this [http://hg-git.github.io]() to install hg-git
+![](https://ensourced.files.wordpress.com/2012/10/mercurialgit.png)
+
+Same local repo pushes to different server repos, e.g one is git (github), the other mercurial (bitbucket). In generall, follow this [http://hg-git.github.io](). The steps are:
+- Have an existing mercurial repo (with commits and stuffs)
+- Install `hg-git` either manually or via `pip`
+- Install dulwich with `pip install dulwich`
+- Install mercurial version 3.7 exactly `pip install mercurial==3.7` since hg-git only supports this version of mercurial
 - Modify the `~/.hgrc` file with
 ```
 [extensions]
 hgext.bookmarks =
-hggit = [path to hg-git or empty if via pip install]
+hggit = [path to hg-git or empty if via pip install or empty (``) if hg-git installed via pip]
 ```
 - To correctly display the authors, modify the username field in the above `.hgrc` file as well (the email should be valid and exact)
 - Add an entry to the file [repo]/.hg/hgrc
 
 ```
 [paths]
-default = https://trong2nguyen@bitbucket.org/trong2nguyen/stanford_software_hire_programs
-github = https://github.com/trong-nguyen/aux-sshp.git # add here
+default = https://[HG repo url]
+github = https://[GIT repo url] # add here
 ```
-- Install dulwich with `pip install dulwich`
-- Install mercurial version 3.7 exactly `pip install mercurial==3.7` since hg-git only supports this version of mercurial
+
 - This scenario is to push from an existing hg repo (created first) to a newly created git repo:
     + Create an empty git repo (no code, no readme, no description, etc.)
     + Add the git path to the `./hg/hgrc` file
